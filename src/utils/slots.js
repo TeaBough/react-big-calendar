@@ -1,5 +1,6 @@
 import moment from 'moment'
-import _ from 'lodash'
+import sortBy from 'lodash/sortBy'
+import forEach from 'lodash/forEach'
 
 export function getTimeslots(events, min, max) {
   let minHour = moment(min).hour();
@@ -11,7 +12,7 @@ export function getTimeslots(events, min, max) {
   }
   let minWithoutDate = moment(moment(min).format('HH:mm'), 'HH:mm');
   let maxWithoutDate = moment(moment(max).format('HH:mm'), 'HH:mm');
-  _.forEach(events, function(e) {
+  forEach(events, function(e) {
     const startWithoutDate = moment(moment(e.start).format('HH:mm'), 'HH,mm');
     const endWithoutDate = moment(moment(e.end).format('HH:mm'), 'HH:mm');
     if (startWithoutDate.isBetween(minWithoutDate, maxWithoutDate)) {
@@ -21,5 +22,5 @@ export function getTimeslots(events, min, max) {
       dict[moment(e.end).format('HH:mm')] = true;
     }
   });
-  return _.sortBy(Object.keys(dict))
+  return sortBy(Object.keys(dict))
 }
