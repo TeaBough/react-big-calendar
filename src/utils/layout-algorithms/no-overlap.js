@@ -1,4 +1,5 @@
 import overlap from './overlap'
+import _orderBy from 'lodash/orderBy'
 
 function getMaxIdxDFS(node, maxIdx, visited) {
   for (let i = 0; i < node.friends.length; ++i) {
@@ -18,19 +19,25 @@ export default function({
   slotMetrics,
   accessors,
 }) {
-  const styledEvents = overlap({
+  let styledEvents = overlap({
     events,
     minimumStartDifference,
     slotMetrics,
     accessors,
   })
 
-  styledEvents.sort((a, b) => {
-    a = a.style
-    b = b.style
-    if (a.top !== b.top) return a.top > b.top ? 1 : -1
-    else return a.top + a.height < b.top + b.height ? 1 : -1
-  })
+  styledEvents = _orderBy(
+    styledEvents,
+    [item => item.event.order, item => item.event.title],
+    ['asc', 'asc']
+  )
+  // styledEvents.sort((a, b) => {
+  //   a = a.style
+  //   b = b.style
+  //   return a.top + a.height < b.top + b.height ? 1 : -1
+  //   if (a.top !== b.top) return a.top > b.top ? 1 : -1
+  //   else return a.top + a.height < b.top + b.height ? 1 : -1
+  // })
 
   for (let i = 0; i < styledEvents.length; ++i) {
     styledEvents[i].friends = []
