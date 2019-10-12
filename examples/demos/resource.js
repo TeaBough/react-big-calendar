@@ -35,10 +35,10 @@ const events = [
 ]
 
 const resourceMap = [
-  { resourceId: 1, resourceTitle: 'Board room' },
-  { resourceId: 2, resourceTitle: 'Training room' },
-  { resourceId: 3, resourceTitle: 'Meeting room 1' },
-  { resourceId: 4, resourceTitle: 'Meeting room 2' },
+  { resourceId: 1, resourceTitle: 'Board room', workingDays: [0, 1, 2, 3] },
+  { resourceId: 2, resourceTitle: 'Training room', workingDays: [0, 1, 2, 3] },
+  { resourceId: 3, resourceTitle: 'Meeting room 1', workingDays: [0, 1, 2, 3] },
+  { resourceId: 4, resourceTitle: 'Meeting room 2', workingDays: [0, 1, 2, 3] },
 ]
 
 let Resource = ({ localizer }) => (
@@ -46,7 +46,7 @@ let Resource = ({ localizer }) => (
     <Calendar
       events={events}
       localizer={localizer}
-      defaultView={Views.DAY}
+      defaultView={'work_week'}
       views={['day', 'work_week']}
       step={60}
       defaultDate={new Date(2018, 0, 29)}

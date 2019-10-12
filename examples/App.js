@@ -46,7 +46,7 @@ const EXAMPLES = {
   rendering: 'Customized Component Rendering',
   customView: 'Custom Calendar Views',
   backgroundEvents: 'Background Events',
-  resource: 'Resource Scheduling',
+  resource: 'Teetsh test',
   dnd: 'Addon: Drag and drop',
   dndresource: 'Resource Drag and drop',
   dndOutsideSource: 'Addon: Drag and drop (from outside calendar)',

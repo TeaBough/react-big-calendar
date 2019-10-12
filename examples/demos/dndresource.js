@@ -66,10 +66,10 @@ const events = [
 ]
 
 const resourceMap = [
-  { resourceId: 1, resourceTitle: 'Board room' },
-  { resourceId: 2, resourceTitle: 'Training room' },
-  { resourceId: 3, resourceTitle: 'Meeting room 1' },
-  { resourceId: 4, resourceTitle: 'Meeting room 2' },
+  { resourceId: 1, resourceTitle: 'Board room', workingDays: [0] },
+  { resourceId: 2, resourceTitle: 'Training room', workingDays: [1] },
+  { resourceId: 3, resourceTitle: 'Meeting room 1', workingDays: [2] },
+  { resourceId: 4, resourceTitle: 'Meeting room 2', workingDays: [3] },
 ]
 
 class Dnd extends React.Component {

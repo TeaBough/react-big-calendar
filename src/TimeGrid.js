@@ -105,7 +105,16 @@ export default class TimeGrid extends Component {
     })
   }
 
-  renderEvents(range, events, backgroundEvents, now) {
+  renderEventDayColumn({
+    id,
+    resource,
+    date,
+    index1,
+    index2,
+    groupedEvents,
+    groupedBackgroundEvents,
+    now,
+  }) {
     let {
       min,
       max,
@@ -114,51 +123,61 @@ export default class TimeGrid extends Component {
       localizer,
       dayLayoutAlgorithm,
     } = this.props
+    let daysEvents = (groupedEvents.get(id) || []).filter(event =>
+      dates.inRange(date, accessors.start(event), accessors.end(event), 'day')
+    )
+    let daysBackgroundEvents = (groupedBackgroundEvents.get(id) || []).filter(
+      event =>
+        dates.inRange(date, accessors.start(event), accessors.end(event), 'day')
+    )
 
+    return (
+      <DayColumn
+        {...this.props}
+        localizer={localizer}
+        min={dates.merge(date, min)}
+        max={dates.merge(date, max)}
+        resource={resource && id}
+        components={components}
+        isNow={dates.eq(date, now, 'day')}
+        key={index1 + '-' + index2}
+        date={date}
+        events={daysEvents}
+        backgroundEvents={daysBackgroundEvents}
+        dayLayoutAlgorithm={dayLayoutAlgorithm}
+      />
+    )
+  }
+
+  renderEvents(range, events, backgroundEvents, now) {
+    let { accessors } = this.props
     const resources = this.memoizedResources(this.props.resources, accessors)
     const groupedEvents = resources.groupEvents(events)
     const groupedBackgroundEvents = resources.groupEvents(backgroundEvents)
 
-    return resources.map(([id, resource], i) =>
-      range.map((date, jj) => {
-        let daysEvents = (groupedEvents.get(id) || []).filter(event =>
-          dates.inRange(
+    return range.map((date, index2) => {
+      const plainResources = resources.map(([id, resource], index1) => ({
+        index1,
+        id,
+        resource,
+      }))
+      return plainResources
+        .filter(r =>
+          (r.resource.workingDays || [date.getDay]).includes(date.getDay())
+        )
+        .map(({ id, resource, index1 }) =>
+          this.renderEventDayColumn({
+            id,
+            resource,
             date,
-            accessors.start(event),
-            accessors.end(event),
-            'day'
-          )
+            index1,
+            index2,
+            groupedEvents,
+            groupedBackgroundEvents,
+            now,
+          })
         )
-
-        let daysBackgroundEvents = (
-          groupedBackgroundEvents.get(id) || []
-        ).filter(event =>
-          dates.inRange(
-            date,
-            accessors.start(event),
-            accessors.end(event),
-            'day'
-          )
-        )
-
-        return (
-          <DayColumn
-            {...this.props}
-            localizer={localizer}
-            min={dates.merge(date, min)}
-            max={dates.merge(date, max)}
-            resource={resource && id}
-            components={components}
-            isNow={dates.eq(date, now, 'day')}
-            key={i + '-' + jj}
-            date={date}
-            events={daysEvents}
-            backgroundEvents={daysBackgroundEvents}
-            dayLayoutAlgorithm={dayLayoutAlgorithm}
-          />
-        )
-      })
-    )
+    })
   }
 
   render() {
